@@ -3,7 +3,7 @@ import { UserContext } from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 
 function SignIn() {
-  const { setUser } = useContext(UserContext);
+  const { setCurUser, setUserAuth } = useContext(UserContext);
   const emailInput = useRef();
   const passwordInput = useRef();
 
@@ -16,13 +16,13 @@ function SignIn() {
         password: passwordInput.current.value,
       },
     };
-    console.log(user);
+
     signInApi(user);
   };
   const signInApi = async (user) => {
     const url = "https://brivity-react-exercise.herokuapp.com/users/sign_in";
     try {
-      const respond = await fetch(url, {
+      const response = await fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -35,8 +35,15 @@ function SignIn() {
         referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(user), // body data type must match "Content-Type" header
       });
-      const data = await respond.json();
-      setUser(data);
+      console.log(response.headers.entries());
+      for (var pair of response.headers.entries()) {
+        if (pair[0] === "authorization") {
+          setUserAuth(pair[1]);
+          console.log(pair[0] + ": " + pair[1]);
+        }
+      }
+      const data = await response.json();
+      setCurUser(data);
       navigate("/dashboard", { replace: true });
     } catch (error) {
       console.log(error);

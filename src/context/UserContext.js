@@ -3,11 +3,17 @@ import { createContext, useState } from "react";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState();
+  const [curUser, setCurUser] = useState();
+  const [isCreatePost, setIsCreatePost] = useState(false);
+  const [userAuth, setUserAuth] = useState();
 
   const defaultValue = {
-    user,
-    setUser,
+    curUser,
+    setCurUser,
+    isCreatePost,
+    setIsCreatePost,
+    userAuth,
+    setUserAuth,
   };
 
   return (

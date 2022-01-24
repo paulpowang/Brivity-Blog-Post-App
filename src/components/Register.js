@@ -28,7 +28,7 @@ function Register() {
   };
   const createUser = async (user) => {
     const url = "https://brivity-react-exercise.herokuapp.com/users";
-    console.log(user);
+
     try {
       const respond = await fetch(url, {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
