@@ -156,14 +156,14 @@ function PostCreation() {
               </button>
               {isEdit ? (
                 <button
-                  className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                  className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
                   onClick={handleOnEditPost}
                 >
                   Edit Post
                 </button>
               ) : (
                 <button
-                  className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                  className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
                   onClick={handleOnCreatePost}
                 >
                   Create Post

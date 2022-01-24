@@ -2,6 +2,9 @@ import React, { useContext, useState } from "react";
 
 import { UserContext } from "../context/UserContext";
 import Comment from "./Comment";
+import CommentCreation from "./CommentCreation";
+import { getPostCommentsApi } from "../api/commentApi";
+import { useEffect } from "react/cjs/react.development";
 
 function Post({
   id,
@@ -19,18 +22,7 @@ function Post({
 
   const handleDisplayComment = (postId) => {
     setIsCommentDisplay(!isCommentDisplay);
-    getPostCommentsApi(postId);
-  };
-  const getPostCommentsApi = async (postId) => {
-    const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
-    const url = hostUrl + `posts/${postId}/comments?page=1`;
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      setComments(data.comments);
-    } catch (error) {
-      console.log(error);
-    }
+    getPostCommentsApi(postId, setComments);
   };
 
   const handleOnEditPost = () => {
@@ -101,6 +93,7 @@ function Post({
             {comments.map((comment) => {
               return <Comment key={comment.id} {...comment} />;
             })}
+            <CommentCreation post_id={id} />
           </div>
         )}
       </div>
