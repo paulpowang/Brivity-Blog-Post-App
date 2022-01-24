@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link, useNavigate } from "react-router-dom";
+import { signInApi } from "../api/signInApi";
 
 function SignIn() {
   const { setCurUser, setUserAuth } = useContext(UserContext);
@@ -17,44 +18,9 @@ function SignIn() {
       },
     };
 
-    signInApi(user);
+    signInApi(user, setCurUser, setUserAuth, navigate);
   };
-  const signInApi = async (user) => {
-    const url = "https://brivity-react-exercise.herokuapp.com/users/sign_in";
-    try {
-      const response = await fetch(url, {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(user), // body data type must match "Content-Type" header
-      });
 
-      const loginUserData = {
-        storedUser: "",
-        storedAuth: "",
-      };
-      for (var pair of response.headers.entries()) {
-        if (pair[0] === "authorization") {
-          loginUserData.storedAuth = pair[1];
-          setUserAuth(pair[1]);
-        }
-      }
-      const data = await response.json();
-      loginUserData.storedUser = data;
-      setCurUser(data);
-      localStorage.setItem("BrivityLoginUser", JSON.stringify(loginUserData));
-      navigate("/dashboard", { replace: true });
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">

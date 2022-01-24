@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { useEffect } from "react/cjs/react.development";
+import { BrivityLoginUser } from "../constants";
 
 export const UserContext = createContext();
 
@@ -11,7 +12,7 @@ export const UserProvider = ({ children }) => {
   const [postToEdit, setPostToEdit] = useState();
 
   useEffect(() => {
-    const storeLoginUser = JSON.parse(localStorage.getItem("BrivityLoginUser"));
+    const storeLoginUser = JSON.parse(localStorage.getItem(BrivityLoginUser));
     console.log(storeLoginUser);
     if (storeLoginUser) {
       setCurUser(storeLoginUser.storedUser);

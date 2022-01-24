@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 import Comment from "./Comment";
 import CommentCreation from "./CommentCreation";
 import { getPostCommentsApi } from "../api/commentApi";
-import { useEffect } from "react/cjs/react.development";
+import { deletePostApi } from "../api/postApi";
 
 function Post({
   id,
@@ -35,27 +35,6 @@ function Post({
     });
   };
 
-  const deletePostApi = async (postId) => {
-    const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
-    const url = hostUrl + `posts/${postId}`;
-    try {
-      await fetch(url, {
-        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-          authorization: userAuth,
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg mt-10 mx-5 p-5 last:mb-5 hover:cursor-pointer">
       <div className="flex justify-between">
@@ -75,7 +54,7 @@ function Post({
           <button className="mr-3" onClick={handleOnEditPost}>
             Edit
           </button>
-          <button onClick={() => deletePostApi(id)}>Delete</button>
+          <button onClick={() => deletePostApi(id, userAuth)}>Delete</button>
         </div>
       )}
       <p

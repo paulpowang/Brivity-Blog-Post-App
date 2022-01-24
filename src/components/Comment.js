@@ -6,6 +6,7 @@ import {
   useContext,
 } from "react/cjs/react.development";
 import { UserContext } from "../context/UserContext";
+import { editCommentApi, deleteCommentApi } from "../api/commentApi";
 
 function Comment({ id, content = "", user }) {
   const contentInput = useRef();
@@ -19,32 +20,8 @@ function Comment({ id, content = "", user }) {
       },
     };
     console.log("comment", comment);
-    editCommentApi(comment);
+    editCommentApi(comment, id, userAuth);
     onCancelClick();
-  };
-  const editCommentApi = async (comment) => {
-    const url = "https://brivity-react-exercise.herokuapp.com/comments/" + id;
-    try {
-      const respond = await fetch(url, {
-        method: "PATCH", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-          "Content-Type": "application/json",
-          authorization: userAuth,
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify(comment), // body data type must match "Content-Type" header
-      });
-      const data = await respond.json();
-
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const onCancelClick = () => {
@@ -56,28 +33,7 @@ function Comment({ id, content = "", user }) {
   };
 
   const handleDeleteOnClick = () => {
-    deleteCommentApi(id);
-  };
-
-  const deleteCommentApi = async (commentId) => {
-    const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
-    const url = hostUrl + `comments/${commentId}`;
-    try {
-      await fetch(url, {
-        method: "DELETE", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-          authorization: userAuth,
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    deleteCommentApi(id, userAuth);
   };
 
   useEffect(() => {
