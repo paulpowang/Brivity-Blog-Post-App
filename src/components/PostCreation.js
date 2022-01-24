@@ -5,7 +5,7 @@ import { UserContext } from "../context/UserContext";
 function PostCreation() {
   const titleInput = useRef();
   const textBodyInput = useRef();
-  const { setIsCreatePost, userAuth, isEdit, postToEdit } =
+  const { setIsCreatePost, userAuth, isEdit, postToEdit, setIsEdit } =
     useContext(UserContext);
 
   const handleOnClose = () => {
@@ -27,6 +27,7 @@ function PostCreation() {
         body: textBodyInput.current.value,
       },
     };
+    setIsEdit(false);
     editPostApi(post);
   };
 
