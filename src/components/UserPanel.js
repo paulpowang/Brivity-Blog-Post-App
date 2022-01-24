@@ -1,10 +1,13 @@
 import React, { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const menuOptions = ["Create Post", "My Posts", "Logout"];
 
 function UserPanel() {
-  const { curUser, setIsCreatePost } = useContext(UserContext);
+  const { curUser, setIsCreatePost, setCurUser, setUserAuth } =
+    useContext(UserContext);
+  const navigate = useNavigate();
   const handleOnClick = (option) => {
     switch (option) {
       case "Create Post":
@@ -14,10 +17,18 @@ function UserPanel() {
       case "My Posts":
         break;
       case "Logout":
+        logoutUser();
         break;
       default:
         console.log("invalid menu option");
     }
+  };
+
+  const logoutUser = () => {
+    localStorage.removeItem("BrivityLoginUser");
+    setCurUser(undefined);
+    setUserAuth(undefined);
+    navigate("/", { replace: true });
   };
 
   return (
