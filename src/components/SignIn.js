@@ -35,15 +35,21 @@ function SignIn() {
         referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body: JSON.stringify(user), // body data type must match "Content-Type" header
       });
-      console.log(response.headers.entries());
+
+      const loginUserData = {
+        storedUser: "",
+        storedAuth: "",
+      };
       for (var pair of response.headers.entries()) {
         if (pair[0] === "authorization") {
+          loginUserData.storedAuth = pair[1];
           setUserAuth(pair[1]);
-          console.log(pair[0] + ": " + pair[1]);
         }
       }
       const data = await response.json();
+      loginUserData.storedUser = data;
       setCurUser(data);
+      localStorage.setItem("BrivityLoginUser", JSON.stringify(loginUserData));
       navigate("/dashboard", { replace: true });
     } catch (error) {
       console.log(error);
