@@ -8,7 +8,7 @@ import {
 import { UserContext } from "../context/UserContext";
 import { editCommentApi, deleteCommentApi } from "../api/commentApi";
 
-function Comment({ id, content = "", user }) {
+function Comment({ id, content = "", user, post_id, setComments }) {
   const contentInput = useRef();
   const [isEditComment, setIsEditComment] = useState(false);
   const { curUser, userAuth } = useContext(UserContext);
@@ -20,7 +20,7 @@ function Comment({ id, content = "", user }) {
       },
     };
     console.log("comment", comment);
-    editCommentApi(comment, id, userAuth);
+    editCommentApi(comment, id, userAuth, post_id, setComments);
     onCancelClick();
   };
 
@@ -33,7 +33,7 @@ function Comment({ id, content = "", user }) {
   };
 
   const handleDeleteOnClick = () => {
-    deleteCommentApi(id, userAuth);
+    deleteCommentApi(id, userAuth, post_id, setComments);
   };
 
   useEffect(() => {
@@ -42,33 +42,48 @@ function Comment({ id, content = "", user }) {
     }
   }, [content, isEditComment]);
   return (
-    <div>
-      <p className="mr-5 font-bold">{user.display_name}</p>
+    <div className="text-sm mb-2">
+      <p className="mr-5 font-bold text-base">{user.display_name}</p>
       {curUser.id === user.id && (
-        <div>
-          <button onClick={() => handleEditOnClick(content)}>Edit</button>
-          <button onClick={handleDeleteOnClick}>Delete</button>
+        <div className="flex justify-end mb-3">
+          <button
+            className="px-2 bg-sky-500 p-1 rounded-lg text-white hover:bg-sky-400 mr-2"
+            onClick={() => handleEditOnClick(content)}
+          >
+            Edit
+          </button>
+          <button
+            className="px-2 bg-red-500 p-1 rounded-lg text-white hover:bg-red-400"
+            onClick={handleDeleteOnClick}
+          >
+            Delete
+          </button>
         </div>
       )}
       {isEditComment ? (
         <div>
-          <input ref={contentInput} type="text" placeholder="Comment..." />
+          <input
+            className="mb-2 w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-sky-500 focus:border-sky-500 focus:z-10"
+            ref={contentInput}
+            type="text"
+            placeholder="Comment..."
+          />
 
           <button
-            className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+            className="px-2 bg-sky-500 p-1 rounded-lg text-white hover:bg-sky-400 mr-3"
             onClick={onEditCommentClick}
           >
-            Edit Comment
+            Save
           </button>
           <button
-            className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+            className="px-2 bg-slate-500 p-1 rounded-lg text-white hover:bg-slate-400"
             onClick={onCancelClick}
           >
             Cancel
           </button>
         </div>
       ) : (
-        <div className="flex border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg p-3">
+        <div className="flex border-solid border-2 border-grey-500 hover:border-cyan-500 rounded-lg p-3">
           <p>{content}</p>
         </div>
       )}

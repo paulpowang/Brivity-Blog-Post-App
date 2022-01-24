@@ -12,7 +12,7 @@ export const getPostCommentsApi = async (postId, setComments) => {
   }
 };
 
-export const addCommentApi = async (comment, userAuth) => {
+export const addCommentApi = async (comment, userAuth, postId, setComments) => {
   const url = hostUrl + "comments";
   try {
     const respond = await fetch(url, {
@@ -26,13 +26,22 @@ export const addCommentApi = async (comment, userAuth) => {
     });
     const data = await respond.json();
 
+    // refresh comments
+    getPostCommentsApi(postId, setComments);
+
     console.log(data);
   } catch (error) {
     console.log(error);
   }
 };
 
-export const editCommentApi = async (comment, comment_id, userAuth) => {
+export const editCommentApi = async (
+  comment,
+  comment_id,
+  userAuth,
+  postId,
+  setComments
+) => {
   const url = hostUrl + "comments/" + comment_id;
   try {
     const respond = await fetch(url, {
@@ -46,6 +55,8 @@ export const editCommentApi = async (comment, comment_id, userAuth) => {
       body: JSON.stringify(comment), // body data type must match "Content-Type" header
     });
     const data = await respond.json();
+    // refresh comments
+    getPostCommentsApi(postId, setComments);
 
     console.log(data);
   } catch (error) {
@@ -53,7 +64,12 @@ export const editCommentApi = async (comment, comment_id, userAuth) => {
   }
 };
 
-export const deleteCommentApi = async (commentId, userAuth) => {
+export const deleteCommentApi = async (
+  commentId,
+  userAuth,
+  postId,
+  setComments
+) => {
   const url = hostUrl + `comments/${commentId}`;
   try {
     await fetch(url, {
@@ -63,6 +79,8 @@ export const deleteCommentApi = async (commentId, userAuth) => {
         authorization: userAuth,
       },
     });
+    // refresh comments
+    getPostCommentsApi(postId, setComments);
   } catch (error) {
     console.log(error);
   }

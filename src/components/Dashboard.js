@@ -1,11 +1,11 @@
 import React from "react";
 import Posts from "./Posts";
-import UserPanel from "./UserPanel";
+import Nav from "./Nav";
 
 function Dashboard() {
   return (
-    <div className="flex flex-row">
-      <UserPanel />
+    <div>
+      <Nav />
       <Posts />
     </div>
   );

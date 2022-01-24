@@ -13,9 +13,9 @@ function Posts() {
   }, [isCreatePost]);
 
   return (
-    <div className="basis-3/4">
+    <div className="mx-20 mb-10">
       {isCreatePost && <PostCreation />}
-      <div className="h-screen overflow-auto">
+      <div className=" overflow-auto">
         {posts &&
           posts.map((post) => {
             return <Post key={post.id} {...post} />;

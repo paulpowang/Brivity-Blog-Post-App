@@ -39,43 +39,69 @@ function Post({
   };
 
   return (
-    <div className="border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg mt-10 mx-5 p-5 last:mb-5">
+    <div className="border-solid border-2 border-sky-600 hover:border-amber-600 rounded-lg mt-10 mx-32 p-5 last:mb-5">
       <div className="flex justify-between">
         <p className="text-lg font-bold">{title}</p>
-        <p className="text-sm">
-          Post by: <span className="font-bold">{user.display_name}</span>
-        </p>
+        <div>
+          <p className="text-sm">
+            Post by: <span className="font-bold">{user.display_name}</span>
+          </p>
+        </div>
       </div>
-      <p className="my-5">{body}</p>
-      <div className="flex justify-between ">
-        <p className="text-sm">created at: {formatTimeStamp(created_at)}</p>
-        <p className="text-sm">last update: {formatTimeStamp(updated_at)}</p>
+      <p className="my-5 mr-10">{body}</p>
+      <div className="flex justify-between text-xs text-slate-400 mb-2">
+        <p>created at: {formatTimeStamp(created_at)}</p>
+        <p>last update: {formatTimeStamp(updated_at)}</p>
       </div>
 
-      {user.id === curUser.id && (
-        <div className="flex justify-end">
-          <button className="mr-3" onClick={handleOnEditPost}>
-            Edit
-          </button>
-          <button onClick={() => deletePostApi(id, userAuth)}>Delete</button>
-        </div>
-      )}
-      <p
-        className="text-sm hover:cursor-pointer"
-        onClick={() => handleDisplayComment(id)}
-      >
-        {comment_count} Comments
-        <span className="font-bold text-2xl ml-3">
-          {isCommentDisplay ? "-" : "+"}
-        </span>{" "}
-      </p>
-      <div className="cursor-default">
+      <div className="flex justify-between items-center">
+        <p
+          className="text-sm hover:cursor-pointer font-bold"
+          onClick={() => handleDisplayComment(id)}
+        >
+          {comment_count} Comments
+          <span
+            className={
+              isCommentDisplay
+                ? "font-bold text-xs text-white ml-3 p-1 bg-slate-500 rounded hover:bg-slate-400"
+                : "font-bold text-xs text-white ml-3 p-1 bg-sky-500 rounded hover:bg-sky-400"
+            }
+          >
+            {isCommentDisplay ? "Close" : "Expand"}
+          </span>{" "}
+        </p>
+        {user.id === curUser.id && (
+          <div className="flex justify-end">
+            <button
+              className="mr-3 px-2 bg-sky-500 p-1 rounded-lg text-white hover:bg-sky-400"
+              onClick={handleOnEditPost}
+            >
+              Edit
+            </button>
+            <button
+              className="px-2 bg-red-500 p-1 rounded-lg text-white hover:bg-red-400"
+              onClick={() => deletePostApi(id, userAuth)}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-3">
         {isCommentDisplay && (
           <div>
             {comments.map((comment) => {
-              return <Comment key={comment.id} {...comment} />;
+              return (
+                <Comment
+                  key={comment.id}
+                  {...comment}
+                  post_id={id}
+                  setComments={setComments}
+                />
+              );
             })}
-            <CommentCreation post_id={id} />
+            <CommentCreation post_id={id} setComments={setComments} />
           </div>
         )}
       </div>
