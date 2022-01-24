@@ -34,9 +34,12 @@ function Post({
       body,
     });
   };
+  const formatTimeStamp = (timeStamp) => {
+    return new Date(timeStamp).toDateString();
+  };
 
   return (
-    <div className="border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg mt-10 mx-5 p-5 last:mb-5 hover:cursor-pointer">
+    <div className="border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg mt-10 mx-5 p-5 last:mb-5">
       <div className="flex justify-between">
         <p className="text-lg font-bold">{title}</p>
         <p className="text-sm">
@@ -45,8 +48,8 @@ function Post({
       </div>
       <p className="my-5">{body}</p>
       <div className="flex justify-between ">
-        <p className="text-sm">created at: {created_at}</p>
-        <p className="text-sm">last update: {updated_at}</p>
+        <p className="text-sm">created at: {formatTimeStamp(created_at)}</p>
+        <p className="text-sm">last update: {formatTimeStamp(updated_at)}</p>
       </div>
 
       {user.id === curUser.id && (
