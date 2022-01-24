@@ -12,7 +12,8 @@ function Post({
   comment_count,
   user,
 }) {
-  const { curUser, userAuth } = useContext(UserContext);
+  const { curUser, userAuth, setIsCreatePost, setIsEdit, setPostToEdit } =
+    useContext(UserContext);
   const [isCommentDisplay, setIsCommentDisplay] = useState(false);
   const [comments, setComments] = useState([]);
 
@@ -30,6 +31,16 @@ function Post({
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleOnEditPost = () => {
+    setIsCreatePost(true);
+    setIsEdit(true);
+    setPostToEdit({
+      id,
+      title,
+      body,
+    });
   };
 
   const deletePostApi = async (postId) => {
@@ -69,7 +80,9 @@ function Post({
 
       {user.id === curUser.id && (
         <div className="flex justify-end">
-          <button className="mr-3">Edit</button>
+          <button className="mr-3" onClick={handleOnEditPost}>
+            Edit
+          </button>
           <button onClick={() => deletePostApi(id)}>Delete</button>
         </div>
       )}

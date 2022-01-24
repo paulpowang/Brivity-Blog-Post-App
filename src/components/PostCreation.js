@@ -1,13 +1,60 @@
 import React, { useRef, useContext } from "react";
+import { useEffect } from "react/cjs/react.development";
 import { UserContext } from "../context/UserContext";
 
 function PostCreation() {
   const titleInput = useRef();
   const textBodyInput = useRef();
-  const { setIsCreatePost, userAuth } = useContext(UserContext);
+  const { setIsCreatePost, userAuth, isEdit, postToEdit } =
+    useContext(UserContext);
 
   const handleOnClose = () => {
     setIsCreatePost(false);
+  };
+
+  useEffect(() => {
+    if (isEdit) {
+      titleInput.current.value = postToEdit.title;
+      textBodyInput.current.value = postToEdit.body;
+    }
+  }, []);
+
+  const handleOnEditPost = (e) => {
+    e.preventDefault();
+    const post = {
+      post: {
+        title: titleInput.current.value,
+        body: textBodyInput.current.value,
+      },
+    };
+    editPostApi(post);
+  };
+
+  const editPostApi = async (post) => {
+    const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
+    const url = hostUrl + `posts/${postToEdit.id}`;
+    try {
+      const respond = await fetch(url, {
+        method: "PATCH", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          authorization: userAuth,
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(post), // body data type must match "Content-Type" header
+      });
+      const data = await respond.json();
+
+      console.log(data);
+      handleOnClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleOnCreatePost = (e) => {
@@ -55,7 +102,10 @@ function PostCreation() {
         <div className="modal-content py-4 text-left px-6">
           <div className="flex justify-between items-center pb-3">
             <p className="text-2xl font-bold">Create a new post</p>
-            <div className="modal-close cursor-pointer z-20">
+            <div
+              className="modal-close cursor-pointer z-20"
+              onClick={handleOnClose}
+            >
               <svg
                 className="fill-current text-black"
                 xmlns="http://www.w3.org/2000/svg"
@@ -103,12 +153,21 @@ function PostCreation() {
               >
                 Close
               </button>
-              <button
-                className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
-                onClick={handleOnCreatePost}
-              >
-                Create Post
-              </button>
+              {isEdit ? (
+                <button
+                  className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                  onClick={handleOnEditPost}
+                >
+                  Edit Post
+                </button>
+              ) : (
+                <button
+                  className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+                  onClick={handleOnCreatePost}
+                >
+                  Create Post
+                </button>
+              )}
             </div>
           </form>
         </div>

@@ -7,6 +7,8 @@ export const UserProvider = ({ children }) => {
   const [curUser, setCurUser] = useState();
   const [isCreatePost, setIsCreatePost] = useState(false);
   const [userAuth, setUserAuth] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  const [postToEdit, setPostToEdit] = useState();
 
   useEffect(() => {
     const storeLoginUser = JSON.parse(localStorage.getItem("BrivityLoginUser"));
@@ -24,6 +26,10 @@ export const UserProvider = ({ children }) => {
     setIsCreatePost,
     userAuth,
     setUserAuth,
+    isEdit,
+    setIsEdit,
+    postToEdit,
+    setPostToEdit,
   };
 
   return (
