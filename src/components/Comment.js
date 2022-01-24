@@ -7,17 +7,8 @@ import {
 } from "react/cjs/react.development";
 import { UserContext } from "../context/UserContext";
 
-function Comment({
-  id,
-  content = "",
-  created_at,
-  updated_at,
-  user,
-  isAddCommentDisplay = false,
-  post_id,
-}) {
+function Comment({ id, content = "", user }) {
   const contentInput = useRef();
-  const [isAddComment, setIsAddComment] = useState(false);
   const [isEditComment, setIsEditComment] = useState(false);
   const { curUser, userAuth } = useContext(UserContext);
 
@@ -27,10 +18,12 @@ function Comment({
         contents: contentInput.current.value,
       },
     };
+    console.log("comment", comment);
     editCommentApi(comment);
+    onCancelClick();
   };
   const editCommentApi = async (comment) => {
-    const url = "https://brivity-react-exercise.herokuapp.com/comment/" + id;
+    const url = "https://brivity-react-exercise.herokuapp.com/comments/" + id;
     try {
       const respond = await fetch(url, {
         method: "PATCH", // *GET, POST, PUT, DELETE, etc.
@@ -55,11 +48,11 @@ function Comment({
   };
 
   const onCancelClick = () => {
-    if (isEditComment) {
-      setIsEditComment(false);
-    } else {
-      contentInput.current.value = "";
-    }
+    setIsEditComment(false);
+  };
+
+  const handleEditOnClick = () => {
+    setIsEditComment(true);
   };
 
   const handleDeleteOnClick = () => {
@@ -91,32 +84,38 @@ function Comment({
     if (isEditComment) {
       contentInput.current.value = content;
     }
-  }, []);
+  }, [content, isEditComment]);
   return (
     <div>
       <p className="mr-5 font-bold">{user.display_name}</p>
       {curUser.id === user.id && (
         <div>
-          <button>Edit</button>
+          <button onClick={() => handleEditOnClick(content)}>Edit</button>
           <button onClick={handleDeleteOnClick}>Delete</button>
         </div>
       )}
+      {isEditComment ? (
+        <div>
+          <input ref={contentInput} type="text" placeholder="Comment..." />
 
-      <div className="flex border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg p-3">
-        <p>{content}</p>
-      </div>
-      <button
-        className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
-        onClick={onEditCommentClick}
-      >
-        Edit Comment
-      </button>
-      <button
-        className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
-        onClick={onCancelClick}
-      >
-        Cancel
-      </button>
+          <button
+            className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+            onClick={onEditCommentClick}
+          >
+            Edit Comment
+          </button>
+          <button
+            className="px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400"
+            onClick={onCancelClick}
+          >
+            Cancel
+          </button>
+        </div>
+      ) : (
+        <div className="flex border-solid border-2 border-indigo-600 hover:border-amber-600 rounded-lg p-3">
+          <p>{content}</p>
+        </div>
+      )}
     </div>
   );
 }
