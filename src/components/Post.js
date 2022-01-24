@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { UserContext } from "../context/UserContext";
+import Comment from "./Comment";
 
 function Post({
   id,
@@ -12,6 +13,25 @@ function Post({
   user,
 }) {
   const { curUser, userAuth } = useContext(UserContext);
+  const [isCommentDisplay, setIsCommentDisplay] = useState(false);
+  const [comments, setComments] = useState([]);
+
+  const handleDisplayComment = (postId) => {
+    setIsCommentDisplay(!isCommentDisplay);
+    getPostCommentsApi(postId);
+  };
+  const getPostCommentsApi = async (postId) => {
+    const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
+    const url = hostUrl + `posts/${postId}/comments?page=1`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setComments(data.comments);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const deletePostApi = async (postId) => {
     const hostUrl = "https://brivity-react-exercise.herokuapp.com/";
     const url = hostUrl + `posts/${postId}`;
@@ -46,13 +66,31 @@ function Post({
         <p className="text-sm">created at: {created_at}</p>
         <p className="text-sm">last update: {updated_at}</p>
       </div>
-      <p className="text-sm">Comments: {comment_count}</p>
+
       {user.id === curUser.id && (
         <div className="flex justify-end">
           <button className="mr-3">Edit</button>
           <button onClick={() => deletePostApi(id)}>Delete</button>
         </div>
       )}
+      <p
+        className="text-sm hover:cursor-pointer"
+        onClick={() => handleDisplayComment(id)}
+      >
+        {comment_count} Comments
+        <span className="font-bold text-2xl ml-3">
+          {isCommentDisplay ? "-" : "+"}
+        </span>{" "}
+      </p>
+      <div className="cursor-default">
+        {isCommentDisplay && (
+          <div>
+            {comments.map((comment) => {
+              return <Comment key={comment.id} {...comment} />;
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
