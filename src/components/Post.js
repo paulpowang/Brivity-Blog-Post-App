@@ -19,10 +19,15 @@ function Post({
     useContext(UserContext);
   const [isCommentDisplay, setIsCommentDisplay] = useState(false);
   const [comments, setComments] = useState([]);
+  let curPage = 1;
 
   const handleDisplayComment = (postId) => {
     setIsCommentDisplay(!isCommentDisplay);
-    getPostCommentsApi(postId, setComments);
+    getPostCommentsApi(postId, setComments, 1);
+  };
+
+  const handleLoadMore = (postId, nextPage) => {
+    getPostCommentsApi(postId, setComments, nextPage);
   };
 
   const handleOnEditPost = () => {
@@ -103,6 +108,25 @@ function Post({
             })}
             <CommentCreation post_id={id} setComments={setComments} />
           </div>
+        )}
+      </div>
+
+      <div className="flex justify-center my-3">
+        {curPage > 1 && (
+          <p
+            className="font-bold hover:cursor-pointer text-center mr-3"
+            onClick={() => handleLoadMore(--curPage)}
+          >
+            Previous Page
+          </p>
+        )}
+        {comments && comments.length > 1 && comments.length % 30 === 0 && (
+          <p
+            className="font-bold hover:cursor-pointer text-center"
+            onClick={() => handleLoadMore(id, ++curPage)}
+          >
+            Next Page
+          </p>
         )}
       </div>
     </div>

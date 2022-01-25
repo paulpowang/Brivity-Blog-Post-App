@@ -1,11 +1,11 @@
 import { hostUrl, HeaderBody } from "../constants";
 
-export const getPosts = async (setPosts) => {
-  const url = hostUrl + "posts?page=1";
+export const getPosts = async (setPosts, nextPage = 1) => {
+  const url = hostUrl + "posts?page=" + nextPage;
   try {
     const res = await fetch(url);
     const data = await res.json();
-    setPosts(data.posts);
+    setPosts([...data.posts]);
   } catch (error) {
     console.log(error);
   }
