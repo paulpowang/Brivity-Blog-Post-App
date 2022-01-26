@@ -5,7 +5,7 @@ describe("Check SignIn/Register UI", () => {
     cy.visit("http://localhost:3000/");
   });
 
-  it.only("Check SignIn page", () => {
+  it("Check SignIn page", () => {
     // check title
     cy.contains("Sign in to your account");
 
@@ -23,5 +23,26 @@ describe("Check SignIn/Register UI", () => {
   it("Register a user", () => {
     // click to register page link
     cy.contains("Create an account").click();
+
+    cy.get("[data-testid=display_name]").type("cccccc");
+    cy.get("[data-testid=email]").type("cccccc@gmail.com");
+    cy.get("[data-testid=password]").type("cccccc");
+    cy.get("[data-testid=createBtn]").click();
+    // redirect to sign in page
+    cy.url().should("eq", "http://localhost:3000/");
+  });
+
+  it("sign in a user, then logout", () => {
+    // check title
+    cy.contains("Sign in to your account");
+
+    cy.get("[data-testid=email]").type("cccccc@gmail.com");
+    cy.get("[data-testid=password]").type("cccccc");
+    cy.get("[data-testid=signinBtn]").click();
+    // redirect to sign in page
+    cy.url().should("contains", "/dashboard");
+
+    cy.get("[data-testid=logout]").click();
+    cy.url().should("eq", "http://localhost:3000/");
   });
 });

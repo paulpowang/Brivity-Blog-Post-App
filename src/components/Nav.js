@@ -31,6 +31,7 @@ function Nav() {
           Create Post
         </p>
         <p
+          data-testid="logout"
           className="hover:cursor-pointer hover:text-slate-300"
           onClick={() => {
             logoutUser();
