@@ -10,7 +10,7 @@ function Posts() {
   let curPage = 1;
   useEffect(() => {
     getPosts(setPosts, 1);
-  }, [isCreatePost, posts]);
+  }, [isCreatePost]);
 
   const handleLoadMore = (nextPage) => {
     getPosts(setPosts, nextPage);
